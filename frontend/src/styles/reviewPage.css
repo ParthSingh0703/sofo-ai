@@ -1,0 +1,118 @@
+/* Common form input styles */
+.review-input {
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 10px;
+  border-radius: 4px;
+  color: white;
+  background-color: rgba(33, 104, 218, 0.49);
+  border: none;
+  outline: none;
+}
+
+.review-input:focus {
+  outline: 1px solid rgba(59, 130, 246, 0.8);
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 10px;
+  border-radius: 4px;
+  color: white;
+  background-color: rgba(33, 104, 218, 0.49);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.review-textarea:focus {
+  outline: 1px solid rgba(59, 130, 246, 0.8);
+}
+
+.review-select {
+  width: 100%;
+  padding: 2px 6px;
+  font-size: 10px;
+  border-radius: 4px;
+  color: white;
+  background-color: rgba(33, 104, 218, 0.49);
+  border: none;
+  outline: none;
+}
+
+.review-select:focus {
+  outline: 1px solid rgba(59, 130, 246, 0.8);
+}
+
+.review-select option {
+  background-color: #1e293b;
+  color: white;
+}
+
+/* Image carousel styles */
+.image-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.image-carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 10;
+  transition: background-color 0.2s;
+}
+
+.carousel-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-arrow-left {
+  left: 10px;
+}
+
+.carousel-arrow-right {
+  right: 10px;
+}
+
+.carousel-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  padding: 16px;
+  color: white;
+}
+
+.carousel-counter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}

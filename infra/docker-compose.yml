@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: mls-postgres
+    environment:
+      POSTGRES_DB: mls
+      POSTGRES_USER: mls
+      POSTGRES_PASSWORD: mls@123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../db/init_v2.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:

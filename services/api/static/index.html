@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLS Automation - Testing Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+
+        .file-upload-area.dragover {
+            background: #e8f0fe;
+            border-color: #667eea;
+        }
+
+        .file-list {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-item {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-item .remove {
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .file-item .remove:hover {
+            opacity: 1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .canonical-display {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .canonical-display pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .image-card .content {
+            padding: 15px;
+        }
+
+        .image-card .label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .image-card .description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        .image-card .meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 MLS Automation Testing Interface</h1>
+            <p>Upload documents and images to test the extraction and enrichment pipeline</p>
+        </div>
+
+        <div class="content">
+            <!-- Status Messages -->
+            <div id="statusMessage" class="status info hidden"></div>
+
+            <!-- Step 1: Create Listing -->
+            <div class="section">
+                <h2>Step 1: Create Listing</h2>
+                <div class="form-group">
+                    <label for="userId">User ID (UUID):</label>
+                    <input type="text" id="userId" placeholder="00000000-0000-0000-0000-000000000001" value="00000000-0000-0000-0000-000000000001">
+                </div>
+                <button class="btn" onclick="createListing()">Create New Listing</button>
+                <div id="listingInfo" class="status info hidden" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Step 2: Upload Documents & Images -->
+            <div class="section" id="uploadSection" style="display: none;">
+                <h2>Step 2: Upload Documents & Images</h2>
+                <div class="file-upload-area" id="combinedUploadArea" onclick="document.getElementById('combinedInput').click()">
+                    <p style="font-size: 18px; margin-bottom: 10px;">📄🖼️ Drop files here or click to browse</p>
+                    <p style="color: #666; font-size: 14px;">
+                        Documents: PDF, DOCX, TXT (Max 50MB each) | 
+                        Images: JPG, JPEG, PNG (Max 10MB each)
+                    </p>
+                </div>
+                <input type="file" id="combinedInput" multiple accept=".pdf,.docx,.txt,.jpg,.jpeg,.png" style="display: none;" onchange="handleCombinedFiles(event)">
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 10px; font-size: 1.1em;">Documents</h3>
+                    <div class="file-list" id="documentList"></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="margin-bottom: 10px; font-size: 1.1em;">Images</h3>
+                    <div class="file-list" id="imageList"></div>
+                </div>
+                <button class="btn btn-success" onclick="uploadAllFiles()" id="uploadAllBtn" style="margin-top: 15px;" disabled>Upload All Files</button>
+            </div>
+
+            <!-- Step 3: Extract Data -->
+            <div class="section" id="processSection" style="display: none;">
+                <h2>Step 3: Extract Data</h2>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                    AI-based extraction using Gemini 2.5 Flash for all extraction tasks (text and images).
+                    This will extract data from documents and automatically analyze images.
+                </p>
+                <button class="btn" onclick="runExtraction()" id="extractBtn">Extract Data</button>
+            </div>
+
+            <!-- Step 5: View Results -->
+            <div class="section" id="resultsSection" style="display: none;">
+                <h2>Step 5: View Results</h2>
+                <button class="btn btn-secondary" onclick="loadCanonical()">Refresh Canonical Listing</button>
+                <button class="btn btn-secondary" onclick="loadImages()">Refresh Images</button>
+                
+                <div style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px;">Canonical Listing (Draft)</h3>
+                    <div class="canonical-display" id="canonicalDisplay">
+                        <p style="color: #999; text-align: center; padding: 40px;">Click "Refresh Canonical Listing" to load data</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px;">Images with Labels & Descriptions</h3>
+                    <div class="images-grid" id="imagesGrid">
+                        <p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">Click "Refresh Images" to load images</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let currentListingId = null;
+        let documentFiles = [];
+        let imageFiles = [];
+
+        // Setup drag and drop
+        setupDragAndDrop();
+
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.classList.remove('hidden');
+            setTimeout(() => {
+                statusEl.classList.add('hidden');
+            }, 5000);
+        }
+
+        function createListing() {
+            const userId = document.getElementById('userId').value.trim();
+            if (!userId) {
+                showStatus('Please enter a User ID', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = 'Creating...<span class="loading"></span>';
+
+            fetch(`${API_BASE}/listings?user_id=${userId}`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                currentListingId = data.listing_id;
+                document.getElementById('listingInfo').innerHTML = 
+                    `<strong>Listing Created!</strong><br>Listing ID: ${currentListingId}`;
+                document.getElementById('listingInfo').classList.remove('hidden');
+                document.getElementById('uploadSection').style.display = 'block';
+                showStatus('Listing created successfully!', 'success');
+            })
+            .catch(err => {
+                showStatus(`Error: ${err.message}`, 'error');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Create New Listing';
+            });
+        }
+
+        function setupDragAndDrop() {
+            const combinedArea = document.getElementById('combinedUploadArea');
+
+            combinedArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                combinedArea.classList.add('dragover');
+            });
+
+            combinedArea.addEventListener('dragleave', () => {
+                combinedArea.classList.remove('dragover');
+            });
+
+            combinedArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                combinedArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                handleCombinedFiles({ target: { files: files } });
+            });
+        }
+
+        function handleCombinedFiles(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (['pdf', 'docx', 'txt'].includes(ext)) {
+                    // Document file
+                    if (file.size > 50 * 1024 * 1024) {
+                        showStatus(`File too large: ${file.name}. Max 50MB.`, 'error');
+                        return;
+                    }
+                    if (!documentFiles.find(f => f.name === file.name && f.size === file.size)) {
+                        documentFiles.push(file);
+                    }
+                } else if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                    // Image file
+                    if (file.size > 10 * 1024 * 1024) {
+                        showStatus(`File too large: ${file.name}. Max 10MB.`, 'error');
+                        return;
+                    }
+                    if (!imageFiles.find(f => f.name === file.name && f.size === file.size)) {
+                        imageFiles.push(file);
+                    }
+                } else {
+                    showStatus(`Invalid file type: ${file.name}. Only PDF, DOCX, TXT, JPG, JPEG, PNG allowed.`, 'error');
+                }
+            });
+            updateDocumentList();
+            updateImageList();
+        }
+
+        function addDocumentFiles(files) {
+            files.forEach(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['pdf', 'docx', 'txt'].includes(ext)) {
+                    showStatus(`Invalid file type: ${file.name}. Only PDF, DOCX, TXT allowed.`, 'error');
+                    return;
+                }
+                if (file.size > 50 * 1024 * 1024) {
+                    showStatus(`File too large: ${file.name}. Max 50MB.`, 'error');
+                    return;
+                }
+                if (!documentFiles.find(f => f.name === file.name && f.size === file.size)) {
+                    documentFiles.push(file);
+                }
+            });
+            updateDocumentList();
+        }
+
+        function addImageFiles(files) {
+            files.forEach(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['jpg', 'jpeg', 'png'].includes(ext)) {
+                    showStatus(`Invalid file type: ${file.name}. Only JPG, JPEG, PNG allowed.`, 'error');
+                    return;
+                }
+                if (file.size > 10 * 1024 * 1024) {
+                    showStatus(`File too large: ${file.name}. Max 10MB.`, 'error');
+                    return;
+                }
+                if (!imageFiles.find(f => f.name === file.name && f.size === file.size)) {
+                    imageFiles.push(file);
+                }
+            });
+            updateImageList();
+        }
+
+        function updateDocumentList() {
+            const list = document.getElementById('documentList');
+            list.innerHTML = documentFiles.map((file, idx) => `
+                <div class="file-item">
+                    <span>${file.name}</span>
+                    <span class="remove" onclick="removeDocument(${idx})">×</span>
+                </div>
+            `).join('');
+            updateUploadButton();
+        }
+
+        function updateImageList() {
+            const list = document.getElementById('imageList');
+            list.innerHTML = imageFiles.map((file, idx) => `
+                <div class="file-item">
+                    <span>${file.name}</span>
+                    <span class="remove" onclick="removeImage(${idx})">×</span>
+                </div>
+            `).join('');
+            updateUploadButton();
+        }
+
+        function updateUploadButton() {
+            const btn = document.getElementById('uploadAllBtn');
+            btn.disabled = documentFiles.length === 0 && imageFiles.length === 0;
+        }
+
+        function removeDocument(idx) {
+            documentFiles.splice(idx, 1);
+            updateDocumentList();
+        }
+
+        function removeImage(idx) {
+            imageFiles.splice(idx, 1);
+            updateImageList();
+        }
+
+        async function uploadAllFiles() {
+            if (!currentListingId) {
+                showStatus('Please create a listing first', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('uploadAllBtn');
+            btn.disabled = true;
+            btn.innerHTML = 'Uploading...<span class="loading"></span>';
+
+            let docSuccessCount = 0;
+            let docErrorCount = 0;
+            let imgSuccessCount = 0;
+            let imgErrorCount = 0;
+
+            // Upload documents
+            for (const file of documentFiles) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const res = await fetch(`${API_BASE}/documents/listings/${currentListingId}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (res.ok) {
+                        docSuccessCount++;
+                    } else {
+                        docErrorCount++;
+                        const error = await res.json();
+                        showStatus(`Error uploading ${file.name}: ${error.detail}`, 'error');
+                    }
+                } catch (err) {
+                    docErrorCount++;
+                    showStatus(`Error uploading ${file.name}: ${err.message}`, 'error');
+                }
+            }
+
+            // Upload images
+            for (const file of imageFiles) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const res = await fetch(`${API_BASE}/images/listings/${currentListingId}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (res.ok) {
+                        imgSuccessCount++;
+                    } else {
+                        imgErrorCount++;
+                        const error = await res.json();
+                        showStatus(`Error uploading ${file.name}: ${error.detail}`, 'error');
+                    }
+                } catch (err) {
+                    imgErrorCount++;
+                    showStatus(`Error uploading ${file.name}: ${err.message}`, 'error');
+                }
+            }
+
+            // Show results
+            if (docSuccessCount > 0 || imgSuccessCount > 0) {
+                const messages = [];
+                if (docSuccessCount > 0) messages.push(`${docSuccessCount} document(s)`);
+                if (imgSuccessCount > 0) messages.push(`${imgSuccessCount} image(s)`);
+                showStatus(`Successfully uploaded ${messages.join(' and ')}`, 'success');
+                document.getElementById('processSection').style.display = 'block';
+            }
+            if (docErrorCount > 0 || imgErrorCount > 0) {
+                const errors = [];
+                if (docErrorCount > 0) errors.push(`${docErrorCount} document(s)`);
+                if (imgErrorCount > 0) errors.push(`${imgErrorCount} image(s)`);
+                showStatus(`Failed to upload ${errors.join(' and ')}`, 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Upload All Files';
+        }
+
+        async function runExtraction() {
+            if (!currentListingId) {
+                showStatus('Please create a listing first', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('extractBtn');
+            btn.disabled = true;
+            btn.innerHTML = 'Extracting...<span class="loading"></span>';
+
+            try {
+                // Run extraction
+                const extractRes = await fetch(`${API_BASE}/extraction/listings/${currentListingId}/extract`, {
+                    method: 'POST'
+                });
+                
+                if (!extractRes.ok) {
+                    throw new Error('Extraction failed');
+                }
+
+                // Run enrichment (analyze images and generate descriptions)
+                const enrichRes = await fetch(`${API_BASE}/enrichment/listings/${currentListingId}/enrich?analyze_images=true&generate_descriptions=true`, {
+                    method: 'POST'
+                });
+
+                if (!enrichRes.ok) {
+                    showStatus('Extraction completed, but enrichment failed', 'error');
+                } else {
+                    showStatus('Extraction and enrichment completed successfully!', 'success');
+                }
+
+                document.getElementById('resultsSection').style.display = 'block';
+                loadCanonical();
+                loadImages();
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Extract Data';
+            }
+        }
+
+        function loadCanonical() {
+            if (!currentListingId) {
+                showStatus('Please create a listing first', 'error');
+                return;
+            }
+
+            const display = document.getElementById('canonicalDisplay');
+            display.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">Loading...</p>';
+
+            fetch(`${API_BASE}/listings/${currentListingId}/canonical`)
+                .then(res => res.json())
+                .then(data => {
+                    display.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                })
+                .catch(err => {
+                    display.innerHTML = `<p style="color: #dc3545;">Error loading canonical: ${err.message}</p>`;
+                });
+        }
+
+        async function loadImages() {
+            if (!currentListingId) {
+                showStatus('Please create a listing first', 'error');
+                return;
+            }
+
+            const grid = document.getElementById('imagesGrid');
+            grid.innerHTML = '<p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">Loading...</p>';
+
+            try {
+                // Get images from database
+                const imagesRes = await fetch(`${API_BASE}/images/listings/${currentListingId}`);
+                const data = await imagesRes.json();
+                const images = data.images || [];
+                
+                if (images.length === 0) {
+                    grid.innerHTML = '<p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">No images found. Upload images and run enrichment.</p>';
+                    return;
+                }
+
+                // Sort by display_order
+                images.sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+
+                grid.innerHTML = images.map(img => {
+                    const imageUrl = `${API_BASE}/images/${currentListingId}/${img.image_id}`;
+                    const label = img.final_label || img.ai_suggested_label || 'Unlabeled';
+                    const description = img.ai_description || '';
+                    const photoType = img.detected_features?.photo_type || 'other';
+                    const roomLabel = img.detected_features?.room_label || label;
+                    
+                    return `
+                        <div class="image-card">
+                            <img src="${imageUrl}" alt="${label}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'200\'%3E%3Crect fill=\'%23f0f0f0\' width=\'300\' height=\'200\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\'%3EImage%3C/text%3E%3C/svg%3E'">
+                            <div class="content">
+                                <div class="label">${label}</div>
+                                <div style="margin: 5px 0;">
+                                    <span class="badge badge-secondary">${photoType}</span>
+                                    ${img.is_primary ? '<span class="badge badge-success">Primary</span>' : ''}
+                                </div>
+                                ${description ? `<div class="description">${description}</div>` : ''}
+                                <div class="meta">
+                                    <span>Order: ${img.display_order || img.ai_suggested_order || 'N/A'}</span>
+                                    <span style="font-size: 11px; color: #999;">${img.original_filename}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                grid.innerHTML = `<p style="color: #dc3545; grid-column: 1 / -1;">Error loading images: ${err.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

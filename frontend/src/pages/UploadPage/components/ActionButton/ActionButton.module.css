@@ -1,0 +1,26 @@
+.button {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 9px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: white;
+  margin-top: 0.7rem;
+}
+
+.active {
+  background-color: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.active:hover {
+  background-color: var(--accent-blue-hover);
+  transform: translateY(-1px);
+}
+
+.inactive {
+  background-color: rgba(37, 99, 235, 0.2);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+}

@@ -1,0 +1,81 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-color);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.loaderWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.circleContainer {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.innerCircle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 25px;
+    background-color: var(--accent-blue);
+    border-radius: 50%;
+}
+
+.outerRing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(37, 99, 235, 0.2);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.outerRing::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: spin 1s linear infinite;
+}
+
+.text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.subtext {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: -1rem;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

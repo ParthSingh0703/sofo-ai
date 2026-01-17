@@ -1,0 +1,15 @@
+.env
+.venv/
+
+# Python cache
+__pycache__/
+
+# Documentation files
+FRONTEND_FLOW.md
+GEMINI_SETUP.md
+SYSTEM_WORKFLOW.md
+WORKFLOW_DIAGRAM.md
+tables.docx
+
+# Storage folder
+storage/

@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CanonicalListing",
+  "type": "object",
+  "required": ["schema_version", "state"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "example": "1.0"
+    },
+
+    "state": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["draft", "locked"]
+        },
+        "validated": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "validated_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "validated_by": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+
+    "listing_meta": {
+      "type": "object",
+      "properties": {
+        "flex_listing": { "type": ["boolean", "null"] },
+        "listing_agreement": { "type": ["string", "null"] },
+        "listing_agreement_document": { "type": ["string", "null"] },
+        "listing_service": { "type": ["string", "null"] },
+        "list_price": { "type": ["number", "null"] },
+        "expiration_date": { "type": ["string", "null"], "format": "date-time" },
+        "special_conditions": { "type": ["string", "null"] },
+        "listing_special_conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tentative_close_date": { "type": ["string", "null"], "format": "date" },
+        "auction_date": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+
+    "location": {
+      "type": "object",
+      "properties": {
+        "street_number": { "type": ["string", "null"] },
+        "street_name": { "type": ["string", "null"] },
+        "street_suffix": { "type": ["string", "null"] },
+        "street_address": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] },
+        "county": { "type": ["string", "null"] },
+        "state": { "type": ["string", "null"] },
+        "country": { "type": ["string", "null"] },
+        "zip_code": { "type": ["string", "null"] },
+        "subdivision": { "type": ["string", "null"] },
+        "tax_legal_description": { "type": ["string", "null"] },
+        "tax_lot": { "type": ["string", "null"] },
+        "parcel_number": { "type": ["string", "null"] },
+        "additional_parcel": { "type": ["boolean", "null"] },
+        "additional_parcel_description": { "type": ["string", "null"] },
+        "mla_area": { "type": ["string", "null"] },
+        "flood_plain": { "type": ["boolean", "null"] },
+        "etj": { "type": ["boolean", "null"] },
+        "latitude": { "type": ["number", "null"] },
+        "longitude": { "type": ["number", "null"] },
+        "poi": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "category": { "type": "string" }
+            },
+            "required": ["name", "category"]
+          }
+        }
+      }
+    },
+
+    "schools": {
+      "type": "object",
+      "properties": {
+        "elementary_school_district": { "type": ["string", "null"] },
+        "middle_junior_school": { "type": ["string", "null"] },
+        "high_school": { "type": ["string", "null"] },
+        "school_district": { "type": ["string", "null"] }
+      }
+    },
+
+    "property": {
+      "type": "object",
+      "properties": {
+        "property_sub_type": { "type": ["string", "null"] },
+        "ownership_type": { "type": ["string", "null"] },
+        "levels": { "type": ["integer", "null"] },
+        "main_level_bedrooms": { "type": ["integer", "null"] },
+        "other_level_bedrooms": { "type": ["integer", "null"] },
+        "bedrooms_total": { "type": ["integer", "null"] },
+        "year_built": { "type": ["integer", "null"] },
+        "year_built_source": { "type": ["string", "null"] },
+        "bathrooms_full": { "type": ["integer", "null"] },
+        "bathrooms_half": { "type": ["integer", "null"] },
+        "bathrooms_total": { "type": ["number", "null"] },
+        "living_area_sqft": { "type": ["integer", "null"] },
+        "living_area_source": { "type": ["string", "null"] },
+        "garage_spaces": { "type": ["number", "null"] },
+        "parking_total": { "type": ["number", "null"] },
+        "direction_faces": { "type": ["string", "null"] },
+        "lot_size_acres": { "type": ["number", "null"] },
+        "property_condition": { "type": ["string", "null"] },
+        "view": { "type": ["string", "null"] },
+        "distance_to_water": { "type": ["number", "null"] },
+        "waterfront_features": { "type": ["string", "null"] },
+        "restrictions": { "type": ["string", "null"] },
+        "living_room": { "type": ["string", "null"] },
+        "dining_room": { "type": ["string", "null"] },
+        "construction_material": { "type": "array", "items": { "type": "string" } },
+        "foundation_details": { "type": "array", "items": { "type": "string" } },
+        "roof": { "type": "array", "items": { "type": "string" } },
+        "lot_features": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "features": {
+      "type": "object",
+      "properties": {
+        "interior_features": { "type": "array", "items": { "type": "string" } },
+        "exterior_features": { "type": "array", "items": { "type": "string" } },
+        "patio_porch_features": { "type": "array", "items": { "type": "string" } },
+        "fireplaces": { "type": "array", "items": { "type": "string" } },
+        "flooring": { "type": "array", "items": { "type": "string" } },
+        "accessibility_features": { "type": "array", "items": { "type": "string" } },
+        "horse_amenities": { "type": "array", "items": { "type": "string" } },
+        "other_structures": { "type": "array", "items": { "type": "string" } },
+        "appliances": { "type": "array", "items": { "type": "string" } },
+        "pool_features": { "type": "array", "items": { "type": "string" } },
+        "guest_accommodations": { "type": ["string", "null"] },
+        "window_features": { "type": "array", "items": { "type": "string" } },
+        "security_features": { "type": "array", "items": { "type": "string" } },
+        "laundry_location": { "type": ["string", "null"] },
+        "fencing": { "type": ["string", "null"] },
+        "community_features": { "type": "array", "items": { "type": "string" } },
+        "parking_features": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "utilities": {
+      "type": "object",
+      "properties": {
+        "utilities": { "type": "array", "items": { "type": "string" } },
+        "heating": { "type": "array", "items": { "type": "string" } },
+        "cooling": { "type": "array", "items": { "type": "string" } },
+        "water_source": { "type": "array", "items": { "type": "string" } },
+        "sewer": { "type": "array", "items": { "type": "string" } },
+        "documents_available": { "type": "array", "items": { "type": "string" } },
+        "disclosures": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "green_energy": {
+      "type": "object",
+      "properties": {
+        "green_energy": { "type": "array", "items": { "type": "string" } },
+        "green_sustainability": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "financial": {
+      "type": "object",
+      "properties": {
+        "association": { "type": ["boolean", "null"] },
+        "association_name": { "type": ["string", "null"] },
+        "association_fee": { "type": ["number", "null"] },
+        "association_amount": { "type": ["number", "null"] },
+        "acceptable_financing": { "type": "array", "items": { "type": "string" } },
+        "estimated_tax": { "type": ["number", "null"] },
+        "tax_year": { "type": ["integer", "null"] },
+        "tax_annual_amount": { "type": ["number", "null"] },
+        "tax_assessed_value": { "type": ["number", "null"] },
+        "tax_rate": { "type": ["number", "null"] },
+        "buyer_incentive": { "type": ["string", "null"] },
+        "tax_exemptions": { "type": "array", "items": { "type": "string" } },
+        "possession": { "type": ["string", "null"] },
+        "seller_contributions": { "type": ["boolean", "null"] },
+        "intermediary": { "type": ["boolean", "null"] }
+      }
+    },
+
+    "showing": {
+      "type": "object",
+      "properties": {
+        "occupant_type": { "type": ["string", "null"] },
+        "showing_requirements": { "type": "array", "items": { "type": "string" } },
+        "owner_name": { "type": ["string", "null"] },
+        "lockbox_type": { "type": ["string", "null"] },
+        "lockbox_location": { "type": ["string", "null"] },
+        "showing_instructions": { "type": ["string", "null"] }
+      }
+    },
+
+    "agents": {
+      "type": "object",
+      "properties": {
+        "listing_agent": { "type": ["string", "null"] },
+        "co_listing_agent": { "type": ["string", "null"] }
+      }
+    },
+
+    "remarks": {
+      "type": "object",
+      "properties": {
+        "directions": { "type": ["string", "null"] },
+        "private_remarks": { "type": ["string", "null"] },
+        "public_remarks": { "type": ["string", "null"] },
+        "syndication_remarks": { "type": ["string", "null"] },
+        "ai_property_description": { "type": ["string", "null"] }
+      }
+    },
+
+    "media": {
+      "type": "object",
+      "properties": {
+        "branded_virtual_tour_url": { "type": ["string", "null"], "format": "uri" },
+        "unbranded_virtual_tour_url": { "type": ["string", "null"], "format": "uri" },
+        "branded_video_tour_url": { "type": ["string", "null"], "format": "uri" },
+        "unbranded_video_tour_url": { "type": ["string", "null"], "format": "uri" },
+        "media_images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "image_id": { "type": "string" },
+              "ai_suggested_description": { "type": ["string", "null"] },
+              "description": { "type": ["string", "null"] },
+              "ai_suggested_label": { "type": ["string", "null"] },
+              "label": { "type": ["string", "null"] },
+              "ai_suggested_room_type": { "type": ["string", "null"] },
+              "room_type": { "type": ["string", "null"] },
+              "is_primary": { "type": "boolean" },
+              "display_order": { "type": "integer" }
+            },
+            "required": ["image_id"]
+          }
+        }
+      }
+    },
+
+    "internet_settings": {
+      "type": "object",
+      "properties": {
+        "internet_entire_listing_display": { "type": ["boolean", "null"] },
+        "internet_automated_valuation_display": { "type": ["boolean", "null"] },
+        "internet_consumer_comment": { "type": ["boolean", "null"] },
+        "internet_address_display": { "type": ["boolean", "null"] }
+      }
+    },
+
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

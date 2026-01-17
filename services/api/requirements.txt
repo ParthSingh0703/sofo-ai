@@ -1,0 +1,19 @@
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+psycopg2-binary>=2.9.9
+pydantic>=2.5.0
+python-multipart>=0.0.6
+
+# Text extraction libraries (optional - install as needed)
+PyPDF2>=3.0.0  # For PDF text extraction
+python-docx>=1.1.0  # For DOCX text extraction
+
+# Vision extraction libraries (optional - install as needed)
+pdf2image>=1.16.3  # For PDF to image conversion (requires poppler)
+Pillow>=10.0.0  # For image processing
+google-genai>=0.2.0  # For Gemini API (Gemini 2.5 Flash)
+
+# Additional utilities
+python-dotenv>=1.0.0  # For environment variable management
+googlemaps>=4.10.0  # For Google Maps API (geocoding, places, directions)
+playwright>=1.40.0  # For browser automation (MLS autofill)

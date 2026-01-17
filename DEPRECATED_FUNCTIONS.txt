@@ -1,0 +1,174 @@
+================================================================================
+DEPRECATED FUNCTIONS - ARCHIVED FOR FUTURE REFERENCE
+================================================================================
+This file documents functions and modules that were removed in favor of 
+AI-only extraction. These may be re-implemented in future versions if needed.
+
+================================================================================
+MODULE: extraction_native_text.py
+================================================================================
+Purpose: Native text extraction from documents (PDF, DOCX, TXT) without OCR.
+Used deterministic regex patterns and optional LLM-assisted parsing.
+
+FUNCTIONS:
+
+1. extract_with_native_text(file_path, file_id, file_extension, use_llm_assisted)
+   - Purpose: Extract structured data from documents using native text layers
+   - Method: Extracted text using PyPDF2/python-docx, then parsed with regex/LLM
+   - Used for: PDFs, DOCX, TXT files with extractable text layers
+   - Replaced by: AI-only extraction (Gemini 1.0 Pro for text, Gemini 2.5 Flash for images)
+
+2. _extract_deterministic(text, file_id, page_texts)
+   - Purpose: Regex-based pattern matching for common MLS fields
+   - Patterns: Address, price, bedrooms, bathrooms, square footage
+   - Used for: Fast, rule-based extraction without API calls
+   - Replaced by: Gemini 1.0 Pro structured extraction
+
+3. _extract_with_llm(text, file_id, page_texts)
+   - Purpose: LLM-assisted structured extraction from text
+   - Model: Groq (meta-llama/llama-4-scout-17b-16e-instruct)
+   - Used for: More accurate extraction when text quality was good
+   - Replaced by: Gemini 1.0 Pro for all text extraction
+
+4. _store_page_texts(file_id, page_texts)
+   - Purpose: Store extracted page texts in document_pages table
+   - Used for: Reference and debugging
+   - Status: May be re-implemented if page-level tracking is needed
+
+5. _find_page_number(full_text, char_position, page_texts)
+   - Purpose: Map character positions to page numbers
+   - Used for: Provenance tracking
+   - Status: May be re-implemented if page-level provenance is needed
+
+================================================================================
+MODULE: text_extraction_utils.py
+================================================================================
+Purpose: Utility functions for extracting native text from different file formats.
+
+STATUS: These functions are still used internally for raw text extraction, but the 
+parsing/structuring logic is deprecated. Raw text is now sent to Gemini 1.0 Pro.
+
+FUNCTIONS:
+
+1. extract_pdf_text(file_path)
+   - Purpose: Extract text from PDF using PyPDF2 (native text layer, no OCR)
+   - Returns: (full_text, page_texts_dict)
+   - Status: Still used in extraction_ai.py (_extract_pdf_text) for raw text extraction
+   - Change: Text is now sent to Gemini 1.0 Pro for structuring (no regex/LLM parsing)
+
+2. extract_docx_text(file_path)
+   - Purpose: Extract text from DOCX files
+   - Returns: (full_text, page_texts_dict)
+   - Status: Still used in extraction_ai.py (_extract_docx_text) for raw text extraction
+   - Change: Text is now sent to Gemini 1.0 Pro for structuring
+
+3. extract_txt_text(file_path)
+   - Purpose: Extract text from plain text files
+   - Returns: (full_text, page_texts_dict)
+   - Status: Still used in extraction_ai.py (_extract_txt_text) for raw text extraction
+   - Change: Text is now sent to Gemini 1.0 Pro for structuring
+
+4. extract_native_text(file_path, file_extension)
+   - Purpose: Unified interface for text extraction from all formats
+   - Returns: (full_text, page_texts_dict)
+   - Status: Replaced by _get_document_text() in extraction_ai.py
+   - Note: Raw text extraction functions are duplicated in extraction_ai.py for self-contained module
+
+================================================================================
+MODULE: text_quality_scorer.py
+================================================================================
+Purpose: Calculate quality scores for extracted text to determine extraction method.
+
+FUNCTIONS:
+
+1. calculate_text_quality_score(text)
+   - Purpose: Score text quality (0.0-1.0) based on various metrics
+   - Metrics: Length, word count, special characters, structure
+   - Used for: Deciding between native text vs vision extraction in "auto" mode
+   - Replaced by: AI-only extraction (no quality scoring needed)
+
+================================================================================
+MODULE: extraction_pipeline.py (OLD METHODS)
+================================================================================
+Purpose: Orchestrated extraction with method switching (native_text, vision, auto).
+
+REMOVED FUNCTIONALITY:
+
+1. ExtractionConfig.extraction_method
+   - Values: "auto", "native_text_only", "vision_only"
+   - Purpose: Switch between extraction methods
+   - Replaced by: AI-only extraction (always uses Gemini)
+
+2. ExtractionConfig.text_quality_threshold
+   - Purpose: Minimum quality score to use native text in "auto" mode
+   - Replaced by: Not needed (AI-only)
+
+3. ExtractionConfig.use_llm_assisted
+   - Purpose: Toggle LLM-assisted parsing for native text
+   - Replaced by: Always uses AI (Gemini)
+
+4. _extract_document() method switching logic
+   - Purpose: Route to native_text or vision based on config
+   - Logic: Try native text, check quality, fallback to vision
+   - Replaced by: Direct AI extraction (text to Gemini 1.0 Pro, images to Gemini 2.5 Flash)
+
+================================================================================
+MODULE: extraction_vision.py (OLD IMPLEMENTATION)
+================================================================================
+Purpose: Vision-based extraction from document images (PDF pages converted to images).
+This entire module has been replaced by extraction_ai.py.
+
+FUNCTIONS (ALL DEPRECATED):
+
+1. extract_with_vision(file_path, file_id, file_extension)
+   - Purpose: Extract data from documents by converting pages to images
+   - Old approach: Convert all PDF pages to images, then use vision API
+   - Replaced by: extraction_ai.extract_with_ai() which handles text and images separately
+
+2. _convert_document_to_images(file_path, file_extension)
+   - Purpose: Convert document pages to image bytes using pdf2image
+   - Used for: Converting PDF pages to images for vision extraction
+   - Replaced by: _extract_images_from_pdf() in extraction_ai.py (only for PDFs with images)
+
+3. _extract_with_vision_ai(page_images, file_id)
+   - Purpose: Use vision API to extract structured data from page images
+   - Old model: Groq (text-only, didn't support vision)
+   - Replaced by: _extract_with_vision_ai() in extraction_ai.py using Gemini 2.5 Flash
+
+4. _call_vision_api(image_base64, model, api_key)
+   - Purpose: Call vision API (Groq/OpenAI) for image extraction
+   - Old implementation: Groq (text-only) or commented OpenAI code
+   - Replaced by: Direct Gemini 2.5 Flash calls in extraction_ai.py
+
+5. _get_vision_extraction_prompt()
+   - Purpose: Get detailed prompt for vision extraction
+   - Status: Moved to extraction_ai.py with updated prompts
+
+6. _flatten_vision_response(extracted_data)
+   - Purpose: Flatten nested vision API response structure
+   - Status: Replaced by _flatten_extraction_data() in extraction_ai.py
+
+================================================================================
+REASON FOR DEPRECATION
+================================================================================
+The old system used a hybrid approach:
+- Native text extraction for documents with good text quality
+- Vision extraction for scanned documents or poor text quality
+- Quality scoring to decide between methods
+
+New AI-only approach:
+- All text goes to Gemini 1.0 Pro (better accuracy, handles all text formats)
+- All images go to Gemini 2.5 Flash (faster, cost-effective for vision)
+- Simpler pipeline, no method switching needed
+- Better accuracy with modern AI models
+
+================================================================================
+POTENTIAL FUTURE RE-IMPLEMENTATION
+================================================================================
+These functions may be re-implemented if:
+1. Cost optimization is needed (native text is free, AI costs money)
+2. Offline processing is required
+3. Speed optimization for simple documents
+4. Hybrid approach proves more efficient for specific use cases
+
+================================================================================

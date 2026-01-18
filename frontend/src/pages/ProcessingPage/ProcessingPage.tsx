@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "../../store/hooks";
 import { setCurrentListing } from "../../store/slices/listingsSlice";
 import { apiClient } from "../../lib/api-client";
-import styles from "./ProcessingPage.module.css";
 
 // ---------- Helper functions (UNCHANGED) ----------
 
@@ -115,17 +114,61 @@ const ProcessingPage = () => {
   }, [canonical, listingId, navigate]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.loaderWrapper}>
-        <div className={styles.circleContainer}>
-          <div className={styles.outerRing}></div>
-          <div className={styles.innerCircle}></div>
-        </div>
-        <p className={styles.text}>{status}</p>
-        <p className={styles.subtext}>This may take a few moments</p>
+  <div
+    className="
+      flex flex-col items-center justify-center
+      w-full h-screen
+      bg-(--bg-color)
+      animate-[fadeIn_0.5s_ease-out]
+    "
+  >
+    <div className="flex flex-col items-center gap-8">
+      <div className="relative w-[80px] h-[80px]">
+        {/* Outer ring */}
+        <div
+          className="
+            absolute inset-0
+            rounded-full
+            border-[3px] border-[rgba(37,99,235,0.2)]
+            box-border
+            after:content-['']
+            after:absolute
+            after:top-[-2px]
+            after:left-[-2px]
+            after:w-[80px]
+            after:h-[80px]
+            after:rounded-full
+            after:border-[2px]
+            after:border-transparent
+            after:border-t-(--accent-blue)
+            after:box-border
+            after:animate-[spin_1s_linear_infinite]
+          "
+        />
+
+        {/* Inner circle */}
+        <div
+          className="
+            absolute top-1/2 left-1/2
+            -translate-x-1/2 -translate-y-1/2
+            w-[25px] h-[25px]
+            bg-(--accent-blue)
+            rounded-full
+          "
+        />
       </div>
+
+      <p className="text-[1.1rem] font-medium text-(--text-primary)">
+        {status}
+      </p>
+
+      <p className="text-[0.85rem] text-(--text-secondary) mt-[-1rem]">
+        This may take a few moments
+      </p>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default ProcessingPage;

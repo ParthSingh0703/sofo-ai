@@ -8,7 +8,6 @@ import { formatRoomType } from '../../utils/roomTypeFormatter';
 import { sortImagesByPrecedence } from '../../utils/imageSorting';
 import MediaCard from './MediaCard';
 import Lightbox from './Lightbox';
-import styles from './MediaPage.module.css';
 
 interface MediaPageProps {
     onBack?: () => void;
@@ -338,69 +337,160 @@ const MediaPage = ({ onBack, onFinalize }: MediaPageProps) => {
     const isLightboxOpen = lightboxIndex !== null;
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div className={styles.headerLeft}>
-                    <button className={styles.backButton} onClick={handleBack}>
-                        <ArrowLeft size={18} />
-                    </button>
-                    <div className={styles.titleGroup}>
-                        <span className={styles.title}>Photos & media</span>
-                        <span className={styles.subtitle}>TOTAL ASSETS: {images.length}</span>
-                    </div>
-                </div>
-                <div className={styles.headerRight}>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileSelect}
-                        accept="image/jpeg,image/jpg,image/png"
-                        multiple
-                        className={styles.hiddenInput}
-                    />
-                    <button
-                        className={styles.addButton}
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading || enriching}
-                    >
-                        <Plus size={16} /> ADD MEDIA
-                    </button>
-                    <button
-                        className={styles.finalizeButton}
-                        onClick={handleFinalize}
-                        disabled={finalizing || uploading || enriching}
-                    >
-                        FINALIZE ASSETS <ChevronRight size={16} />
-                    </button>
-                </div>
-            </div>
+  <div
+    className="
+      w-full h-screen
+      flex flex-col
+      bg-[#050505]
+      text-white
+      overflow-hidden
+      p-4
+      gap-4
+    "
+  >
+    <div
+      className="
+        flex items-center justify-between
+        p-4 px-6
+        bg-[#0c0c0c]
+        border border-(--card-border)
+        rounded-xl
+      "
+    >
+      <div className="flex items-center gap-4">
+        <button
+          onClick={handleBack}
+          className="
+            bg-white/5
+            border border-(--card-border)
+            text-white
+            p-2
+            rounded-lg
+            cursor-pointer
+            flex items-center justify-center
+            transition-colors duration-200
+            hover:bg-white/10
+          "
+        >
+          <ArrowLeft size={18} />
+        </button>
 
-            <div className={styles.content}>
-                <div className={styles.grid}>
-                    {images.map((img, index) => (
-                        <MediaCard
-                            key={img.id}
-                            image={img}
-                            index={index}
-                            onMagnify={openLightbox}
-                            onEdit={handleEditImage}
-                            onDelete={handleDeleteImage}
-                        />
-                    ))}
-                </div>
-            </div>
-
-            {isLightboxOpen && lightboxIndex !== null && (
-                <Lightbox
-                    images={images}
-                    currentIndex={lightboxIndex}
-                    onClose={closeLightbox}
-                    onNext={nextImage}
-                    onPrev={prevImage}
-                />
-            )}
+        <div className="flex flex-col">
+          <span className="text-[1.1rem] font-semibold">
+            Photos & media
+          </span>
+          <span
+            className="
+              text-[0.7rem]
+              text-(--text-secondary)
+              uppercase
+              tracking-[0.05em]
+              mt-[0.2rem]
+            "
+          >
+            TOTAL ASSETS: {images.length}
+          </span>
         </div>
-    );
+      </div>
+
+      <div className="flex gap-4">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          accept="image/jpeg,image/jpg,image/png"
+          multiple
+          className="hidden"
+        />
+
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading || enriching}
+          className="
+            bg-white/5
+            border border-(--card-border)
+            text-white
+            px-4 py-[0.6rem]
+            rounded-md
+            text-[0.75rem]
+            font-semibold
+            uppercase
+            flex items-center gap-2
+            transition-colors duration-200
+            hover:bg-white/10
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+          "
+        >
+          <Plus size={16} /> ADD MEDIA
+        </button>
+
+        <button
+          onClick={handleFinalize}
+          disabled={finalizing || uploading || enriching}
+          className="
+            bg-(--accent-blue)
+            text-white
+            px-[1.2rem] py-[0.6rem]
+            rounded-md
+            text-[0.75rem]
+            font-semibold
+            uppercase
+            flex items-center gap-2
+            transition-colors duration-200
+            hover:bg-(--accent-blue-hover)
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+          "
+        >
+          FINALIZE ASSETS <ChevronRight size={16} />
+        </button>
+      </div>
+    </div>
+
+    <div
+      className="
+        flex-1
+        overflow-y-auto
+        rounded-xl
+        border border-(--card-border)
+        bg-[#0c0c0c]
+        p-6
+      "
+    >
+      <div
+        className="
+          grid
+          grid-cols-[repeat(auto-fit,minmax(300px,1fr))]
+          gap-6
+          w-full
+        "
+      >
+        {images.map((img, index) => (
+          <MediaCard
+            key={img.id}
+            image={img}
+            index={index}
+            onMagnify={openLightbox}
+            onEdit={handleEditImage}
+            onDelete={handleDeleteImage}
+          />
+        ))}
+      </div>
+    </div>
+
+    {isLightboxOpen && lightboxIndex !== null && (
+      <Lightbox
+        images={images}
+        currentIndex={lightboxIndex}
+        onClose={closeLightbox}
+        onNext={nextImage}
+        onPrev={prevImage}
+      />
+    )}
+  </div>
+);
+
 };
 
 export default MediaPage;

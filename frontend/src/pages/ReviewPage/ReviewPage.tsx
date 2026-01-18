@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { addToast } from '../../store/slices/uiSlice';
 import TopicSection from './TopicSection';
 import EditableField from './EditableField';
-import PropertyMap from '../PropertyMap/PropertyMap';
+import PropertyMap from '../../components/PropertyMap/PropertyMap';
 import {
     formatCurrency,
     formatDate,

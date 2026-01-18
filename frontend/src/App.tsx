@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { store } from './store/store';
 import CreateListingPage from './pages/CreateListingPage';
 import UploadPage from './pages/UploadPage/UploadPage';
-import ProcessingPage from './components/ProcessingPage/ProcessingPage';
-import ReviewPage from './components/ReviewPage/ReviewPage';
-import MediaPage from './components/MediaPage/MediaPage';
+import ProcessingPage from './pages/ProcessingPage/ProcessingPage';
+import ReviewPage from './pages/ReviewPage/ReviewPage';
+import MediaPage from './pages/MediaPage/MediaPage';
 import MLSAutomationPage from './pages/MLSAutomationPage';
 
 const queryClient = new QueryClient({

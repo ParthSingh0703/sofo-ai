@@ -1,7 +1,5 @@
-import { useRef, useState } from 'react';
-import { UploadCloud } from 'lucide-react';
-import styles from './DropZone.module.css';
-
+import { useRef, useState } from "react";
+import { UploadCloud } from "lucide-react";
 interface DropZoneProps {
   onFilesSelected: (files: File[]) => void;
 }
@@ -47,14 +45,23 @@ const DropZone = ({ onFilesSelected }: DropZoneProps) => {
       onFilesSelected(Array.from(e.target.files));
       // Reset input value to allow selecting the same file again
       if (e.target) {
-        e.target.value = '';
+        e.target.value = "";
       }
     }
   };
 
   return (
     <div
-      className={`${styles.dropArea} ${isDragging ? styles.dragging : ''}`}
+      className={`
+      w-full
+      flex flex-col
+      items-center justify-center
+      cursor-pointer
+      transition-[transform,opacity] duration-200
+      rounded-[8px]
+      border-2 border-transparent
+      ${isDragging ? "border-(--accent-blue) bg-[rgba(37,99,235,0.1)]" : ""}
+    `}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
@@ -65,17 +72,22 @@ const DropZone = ({ onFilesSelected }: DropZoneProps) => {
         type="file"
         ref={fileInputRef}
         onChange={handleFileInput}
-        className={styles.fileInput}
+        className="hidden"
         multiple
         accept=".pdf,.txt,.docx,.jpeg,.jpg,.png"
       />
 
-      <div className={styles.iconWrapper}>
+      <div className="mb-[0.7rem]">
         <UploadCloud size={34} color="white" />
       </div>
 
-      <p className={styles.mainText}>Click to upload or drag and drop</p>
-      <p className={styles.subText}>PDF, TXT, DOCX, JPEG, JPG, PNG</p>
+      <p className="text-[1.2rem] font-semibold text-(--text-primary) mb-[0.35rem]">
+        Click to upload or drag and drop
+      </p>
+
+      <p className="text-[0.9rem] text-(--text-secondary) uppercase">
+        PDF, TXT, DOCX, JPEG, JPG, PNG
+      </p>
     </div>
   );
 };

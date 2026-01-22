@@ -103,41 +103,66 @@ export default function CreateListingPage() {
   }, [userId, navigate, dispatch, isCreating]);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center text-white" style={{ backgroundColor: '#0F1115' }}>
-      <div className="flex flex-col items-center gap-8 w-full max-w-lg px-4">
-        <div className="flex flex-col items-center gap-4">
-          <h1 className="text-3xl font-semibold text-white text-center">MLS Automation</h1>
-          <p className="text-white text-center max-w-md">
-            Create a new listing to get started with AI-powered document extraction and MLS automation.
-          </p>
-        </div>
+  <div
+    className="min-h-screen w-full flex items-center justify-center text-white"
+    style={{ backgroundColor: '#0F1115' }}
+  >
+    <div className="flex flex-col items-center w-full max-w-xl px-6 text-center">
 
-        <button
-          onClick={handleCreateListing}
-          disabled={isCreating}
-          className={`
-            flex items-center justify-center gap-3 px-8 py-4 rounded-lg font-medium text-base transition-all
-            text-black border-2
-            bg-blue-600 hover:bg-blue-700 border-blue-500 hover:border-blue-600
-            disabled:opacity-50 disabled:cursor-not-allowed
-            shadow-lg hover:shadow-xl
-            min-w-[200px]
-            ${isCreating ? 'cursor-wait' : 'cursor-pointer'}
-          `}
-        >
-          {isCreating ? (
-            <>
-              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-              <span className="text-black">Creating...</span>
-            </>
-          ) : (
-            <>
-              <Plus className="w-5 h-5 text-black" />
-              <span className="text-black">Create New Listing</span>
-            </>
-          )}
-        </button>
-      </div>
+      {/* Heading */}
+      <h1 className="text-5xl font-semibold tracking-tight mb-4">
+        MLS Automation
+      </h1>
+
+      {/* Subheading */}
+      <p className="text-base text-white/60 max-w-md leading-relaxed mb-6">
+        Create a new listing to get started with AI-powered document
+        extraction and MLS automation.
+      </p>
+
+      {/* CTA */}
+      <button
+        onClick={handleCreateListing}
+        disabled={isCreating}
+        className={`
+          group
+          relative
+          inline-flex items-center justify-center gap-3
+          px-5 py-2
+          rounded-full
+          font-medium text-base
+          text-white
+          bg-blue-600
+          transition-all duration-200 ease-out
+          hover:bg-blue-500
+          hover:shadow-[0_0_40px_rgba(59,130,246,0.35)]
+          active:scale-[0.96]
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-blue-500
+          focus-visible:ring-offset-2
+          focus-visible:ring-offset-[#0F1115]
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+          ${isCreating ? 'cursor-wait' : 'cursor-pointer'}
+        `}
+      >
+        {isCreating ? (
+          <>
+            <div className="w-5 h-5 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+            <span className="tracking-tight">Creating…</span>
+          </>
+        ) : (
+          <>
+            <Plus className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
+            <span className="tracking-tight">Create New Listing</span>
+          </>
+        )}
+      </button>
     </div>
-  );
+  </div>
+);
+
+
+
 }

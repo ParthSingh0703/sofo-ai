@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import styles from './PropertyMap.module.css';
 
 interface PropertyMapProps {
   latitude: number | null;
@@ -106,55 +105,90 @@ const PropertyMap = ({ latitude, longitude, onLatitudeChange, onLongitudeChange 
   }, [latitude, longitude, apiKey]);
 
   return (
-    <div className={styles.container}>
-      {(latitude && longitude) ? (
-        <div className={styles.mapWrapper}>
-          <div ref={mapRef} className={styles.map} />
-        </div>
-      ) : (
-        <div className={styles.mapPlaceholder}>
-          <p className={styles.placeholderText}>Enter coordinates below to view map</p>
-        </div>
-      )}
-      
-      <div className={styles.coordinates}>
-        <div className={styles.coordRow}>
-          <label className={styles.coordLabel}>Latitude</label>
-          <input
-            type="number"
-            step="any"
-            value={latitude !== null && latitude !== undefined ? latitude : ''}
-            onChange={(e) => {
-              const value = e.target.value ? parseFloat(e.target.value) : null;
-              if (onLatitudeChange) {
-                onLatitudeChange(value);
-              }
-            }}
-            onWheel={(e) => e.currentTarget.blur()}
-            className={styles.coordInput}
-            placeholder="Enter latitude"
-          />
-        </div>
-        <div className={styles.coordRow}>
-          <label className={styles.coordLabel}>Longitude</label>
-          <input
-            type="number"
-            step="any"
-            value={longitude !== null && longitude !== undefined ? longitude : ''}
-            onChange={(e) => {
-              const value = e.target.value ? parseFloat(e.target.value) : null;
-              if (onLongitudeChange) {
-                onLongitudeChange(value);
-              }
-            }}
-            onWheel={(e) => e.currentTarget.blur()}
-            className={styles.coordInput}
-            placeholder="Enter longitude"
-          />
-        </div>
+  <div className="w-full flex flex-col gap-2 mb-[0.2rem]">
+    {(latitude && longitude) ? (
+      <div className="w-full h-[200px] rounded-lg overflow-hidden border border-white/10 bg-white/5 relative">
+        <div
+          ref={mapRef}
+          className="w-full h-full border-none pointer-events-auto"
+        />
+      </div>
+    ) : (
+      <div className="w-full h-[200px] flex items-center justify-center rounded-lg border border-white/10 bg-white/5">
+        <p className="text-white/50 text-[0.75rem]">
+          Enter coordinates below to view map
+        </p>
+      </div>
+    )}
+
+    <div className="grid grid-cols-2 gap-[0.8rem] text-[0.7rem]">
+      <div className="flex flex-col gap-[0.15rem] w-full">
+        <label className="text-[0.55rem] uppercase text-(--text-secondary) font-medium tracking-[0.02em] pl-[0.2rem]">
+          Latitude
+        </label>
+        <input
+          type="number"
+          step="any"
+          value={latitude !== null && latitude !== undefined ? latitude : ''}
+          onChange={(e) => {
+            const value = e.target.value ? parseFloat(e.target.value) : null;
+            if (onLatitudeChange) {
+              onLatitudeChange(value);
+            }
+          }}
+          onWheel={(e) => e.currentTarget.blur()}
+          placeholder="Enter latitude"
+          className="
+            w-full px-[0.2rem] py-[0.3rem]
+            rounded
+            bg-transparent
+            border border-transparent
+            text-(--text-primary)
+            text-[0.8rem]
+            outline-none
+            font-inherit
+            transition-all duration-200 ease-in-out
+            hover:bg-white/5 hover:border-(--card-border)
+            focus:bg-[rgba(37,99,235,0.15)] focus:border-(--accent-blue)
+          "
+        />
+      </div>
+
+      <div className="flex flex-col gap-[0.15rem] w-full">
+        <label className="text-[0.55rem] uppercase text-(--text-secondary) font-medium tracking-[0.02em] pl-[0.2rem]">
+          Longitude
+        </label>
+        <input
+          type="number"
+          step="any"
+          value={longitude !== null && longitude !== undefined ? longitude : ''}
+          onChange={(e) => {
+            const value = e.target.value ? parseFloat(e.target.value) : null;
+            if (onLongitudeChange) {
+              onLongitudeChange(value);
+            }
+          }}
+          onWheel={(e) => e.currentTarget.blur()}
+          placeholder="Enter longitude"
+          className="
+            w-full px-[0.2rem] py-[0.3rem]
+            rounded
+            bg-transparent
+            border border-transparent
+            text-(--text-primary)
+            text-[0.8rem]
+            outline-none
+            font-inherit
+            transition-all duration-200 ease-in-out
+            hover:bg-white/5 hover:border-(--card-border)
+            focus:bg-[rgba(37,99,235,0.15)] focus:border-(--accent-blue)
+          "
+        />
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default PropertyMap;

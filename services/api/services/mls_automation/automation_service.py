@@ -15,11 +15,11 @@ from datetime import datetime
 from pathlib import Path
 
 try:
-    from playwright.sync_api import sync_playwright, Page, Browser, BrowserContext, TimeoutError as PlaywrightTimeoutError
+    from playwright.async_api import async_playwright, Page, Browser, BrowserContext, TimeoutError as PlaywrightTimeoutError
     PLAYWRIGHT_AVAILABLE = True
 except ImportError:
     PLAYWRIGHT_AVAILABLE = False
-    sync_playwright = None
+    async_playwright = None
     Page = None
     Browser = None
     BrowserContext = None
@@ -114,7 +114,7 @@ def prepare_automation_config(
     )
 
 
-def open_listing_site(listing_id: UUID, mls_system_code: str, mls_url: Optional[str] = None) -> dict:
+async def open_listing_site(listing_id: UUID, mls_system_code: str, mls_url: Optional[str] = None) -> dict:
     """
     Open MLS listing site in a browser session that stays open.
     User can navigate and login manually before starting automation.
@@ -153,30 +153,27 @@ def open_listing_site(listing_id: UUID, mls_system_code: str, mls_url: Optional[
     
     try:
         # Don't use 'with' so browser stays open - store playwright instance
-        p = sync_playwright().start()
+        p = await async_playwright().start()
         _playwright_instances[listing_id] = p
         
         # Launch browser in headed mode
-        browser = p.chromium.launch(headless=False, slow_mo=500)
-        context = browser.new_context(
+        browser = await p.chromium.launch(headless=False, slow_mo=500)
+        context = await browser.new_context(
             viewport={'width': 1920, 'height': 1080},
             user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         )
-        page = context.new_page()
+        page = await context.new_page()
         
         # Navigate to MLS URL
-        page.goto(target_url, wait_until="networkidle")
+        await page.goto(target_url, wait_until="networkidle")
         time.sleep(2)  # Allow page to stabilize
         
-        # Start periodic screenshot thread for live streaming
-        screenshot_thread_running = threading.Event()
-        screenshot_thread_running.set()
-        screenshot_thread = threading.Thread(
-            target=_periodic_screenshots,
-            args=(page, listing_id, screenshot_thread_running),
-            daemon=True
+        # Start periodic screenshot task for live streaming
+        import asyncio
+        screenshot_task_running = True
+        screenshot_task = asyncio.create_task(
+            _periodic_screenshots_task(page, listing_id, screenshot_task_running)
         )
-        screenshot_thread.start()
         
         # Store session (browser stays open)
         session = BrowserSession(listing_id, browser, context, page)
@@ -194,7 +191,7 @@ def open_listing_site(listing_id: UUID, mls_system_code: str, mls_url: Optional[
         }
 
 
-def start_automation(config: AutomationConfig) -> AutomationResult:
+async def start_automation(config: AutomationConfig) -> AutomationResult:
     """
     Start Playwright automation to autofill MLS form.
     
@@ -241,35 +238,31 @@ def start_automation(config: AutomationConfig) -> AutomationResult:
         should_close_browser = False  # Keep browser open after automation
     else:
         # Create new browser session (fallback for backwards compatibility)
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False, slow_mo=500)
-            context = browser.new_context(
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=False, slow_mo=500)
+            context = await browser.new_context(
                 viewport={'width': 1920, 'height': 1080},
                 user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             )
-            page = context.new_page()
+            page = await context.new_page()
             should_close_browser = True
             
             # Navigate to MLS URL (if provided for new MLS) or use known MLS URL
             mls_url = config.mls_url or _get_mls_url(config.mls_system_code)
             if not mls_url:
                 result.errors.append("MLS URL not provided and not found in configuration")
-                browser.close()
+                await browser.close()
                 return result
             
-            page.goto(mls_url, wait_until="networkidle")
+            await page.goto(mls_url, wait_until="networkidle")
             time.sleep(2)  # Allow page to stabilize
     
     try:
-        # Start periodic screenshot thread for live streaming (if not already running)
-        screenshot_thread_running = threading.Event()
-        screenshot_thread_running.set()
-        screenshot_thread = threading.Thread(
-            target=_periodic_screenshots,
-            args=(page, config.listing_id, screenshot_thread_running),
-            daemon=True
+        # Start periodic screenshot task for live streaming (if not already running)
+        import asyncio
+        screenshot_task = asyncio.create_task(
+            _periodic_screenshots_task(page, config.listing_id)
         )
-        screenshot_thread.start()
         
         try:
             # Step 1: MLS detection (known vs new) - Login checking removed per user request
@@ -309,7 +302,7 @@ def start_automation(config: AutomationConfig) -> AutomationResult:
                 result.errors.append("Failed to save MLS listing")
             
             # Take final screenshot
-            screenshot_path = _take_screenshot(page, config.listing_id, "final")
+            screenshot_path = await _take_screenshot(page, config.listing_id, "final")
             result.screenshot_paths.append(screenshot_path)
             
         except Exception as e:
@@ -317,20 +310,22 @@ def start_automation(config: AutomationConfig) -> AutomationResult:
             result.errors.append(f"Automation error: {str(e)}")
             # Take error screenshot
             try:
-                screenshot_path = _take_screenshot(page, config.listing_id, "error")
+                screenshot_path = await _take_screenshot(page, config.listing_id, "error")
                 result.screenshot_paths.append(screenshot_path)
             except:
                 pass
             raise
         finally:
             # Stop periodic screenshots
-            if 'screenshot_thread_running' in locals():
-                screenshot_thread_running.clear()
-            if 'screenshot_thread' in locals():
-                screenshot_thread.join(timeout=2.0)
+            if 'screenshot_task' in locals():
+                screenshot_task.cancel()
+                try:
+                    await screenshot_task
+                except asyncio.CancelledError:
+                    pass
             # Only close browser if we created it (not using existing session)
             if should_close_browser and 'browser' in locals():
-                browser.close()
+                await browser.close()
     
     except Exception as e:
         result.status = "failed"
@@ -680,29 +675,33 @@ def _save_mls_listing(page: Page, mls_system_code: str) -> bool:
     return result.get("success", False)
 
 
-def _periodic_screenshots(page: Page, listing_id: UUID, running: threading.Event, interval: float = 1.0) -> None:
+async def _periodic_screenshots_task(page: Page, listing_id: UUID, interval: float = 1.0) -> None:
     """
     Take periodic screenshots for live streaming during automation.
     
     Args:
         page: Playwright page object
         listing_id: Listing ID
-        running: Threading event to control when to stop
         interval: Screenshot interval in seconds (default 1.0)
     """
-    while running.is_set():
-        try:
-            # Take live screenshot with consistent filename
-            live_rel_path = os.path.join("automation_screenshots", f"{listing_id}_live.png")
-            live_abs_path = os.path.join(STORAGE_ROOT, live_rel_path)
-            page.screenshot(path=live_abs_path, full_page=False)
-        except Exception:
-            # Ignore screenshot errors (browser might be closed)
-            pass
-        time.sleep(interval)
+    import asyncio
+    try:
+        while True:
+            try:
+                # Take live screenshot with consistent filename
+                live_rel_path = os.path.join("automation_screenshots", f"{listing_id}_live.png")
+                live_abs_path = os.path.join(STORAGE_ROOT, live_rel_path)
+                await page.screenshot(path=live_abs_path, full_page=False)
+            except Exception:
+                # Ignore screenshot errors (browser might be closed)
+                pass
+            await asyncio.sleep(interval)
+    except asyncio.CancelledError:
+        # Task was cancelled, exit gracefully
+        pass
 
 
-def _take_screenshot(page: Page, listing_id: UUID, suffix: str) -> str:
+async def _take_screenshot(page: Page, listing_id: UUID, suffix: str) -> str:
     """
     Take screenshot and save to storage.
     
@@ -719,5 +718,5 @@ def _take_screenshot(page: Page, listing_id: UUID, suffix: str) -> str:
     rel_path = os.path.join("automation_screenshots", filename)
     abs_path = os.path.join(STORAGE_ROOT, rel_path)
     
-    page.screenshot(path=abs_path)
+    await page.screenshot(path=abs_path)
     return rel_path

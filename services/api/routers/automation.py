@@ -23,7 +23,7 @@ STORAGE_ROOT = os.getenv("STORAGE_ROOT", "storage")
 
 
 @router.post("/listings/{listing_id}/open-site")
-def open_site(
+async def open_site(
     listing_id: UUID,
     mls_system: str = Query(..., description="MLS system code (e.g., 'unlock_mls')"),
     mls_url: str = Query(None, description="MLS URL for new MLS discovery (optional)")
@@ -41,7 +41,7 @@ def open_site(
         Dictionary with status and message
     """
     try:
-        result = open_listing_site(listing_id, mls_system, mls_url)
+        result = await open_listing_site(listing_id, mls_system, mls_url)
         return result
     except Exception as e:
         raise HTTPException(
@@ -83,7 +83,7 @@ def close_browser_session(listing_id: UUID) -> dict:
 
 
 @router.post("/listings/{listing_id}/start")
-def start_mls_automation(
+async def start_mls_automation(
     listing_id: UUID,
     mls_system: str = Query(..., description="MLS system code (e.g., 'unlock_mls')"),
     mls_url: str = Query(None, description="MLS URL for new MLS discovery (optional)")
@@ -109,7 +109,7 @@ def start_mls_automation(
         config = prepare_automation_config(listing_id, mls_system, mls_url)
         
         # Start automation
-        result = start_automation(config)
+        result = await start_automation(config)
         
         return result
         

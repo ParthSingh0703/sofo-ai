@@ -1274,12 +1274,660 @@ const ReviewPage = ({ onNext }: ReviewPageProps) => {
                 }
               />
             </TopicSection>
+
+            <TopicSection title="6. Other Fields" defaultOpen={false}>
+              {/* Listing Meta Fields */}
+              <EditableField
+                label="Flex Listing"
+                value={getBooleanValue(["listing_meta", "flex_listing"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "flexListing",
+                    ["listing_meta", "flex_listing"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Listing Agreement Document"
+                value={getFieldValue(["listing_meta", "listing_agreement_document"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "listingAgreementDocument",
+                    ["listing_meta", "listing_agreement_document"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Listing Special Conditions"
+                value={getArrayValue(["listing_meta", "listing_special_conditions"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "listingSpecialConditions",
+                    ["listing_meta", "listing_special_conditions"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Tentative Close Date"
+                value={formatDate(listingMeta?.tentative_close_date as string | null)}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "tentativeCloseDate",
+                    ["listing_meta", "tentative_close_date"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Auction Date"
+                value={formatDate(listingMeta?.auction_date as string | null)}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "auctionDate",
+                    ["listing_meta", "auction_date"],
+                    v,
+                  )
+                }
+              />
+
+              {/* Location Additional Fields */}
+              <EditableField
+                label="Street Number"
+                value={getFieldValue(["location", "street_number"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("streetNumber", ["location", "street_number"], v)
+                }
+              />
+              <EditableField
+                label="Street Name"
+                value={getFieldValue(["location", "street_name"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("streetName", ["location", "street_name"], v)
+                }
+              />
+              <EditableField
+                label="Street Suffix"
+                value={getFieldValue(["location", "street_suffix"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("streetSuffix", ["location", "street_suffix"], v)
+                }
+              />
+              <EditableField
+                label="Country"
+                value={getFieldValue(["location", "country"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("country", ["location", "country"], v)
+                }
+              />
+              <EditableField
+                label="Tax Lot"
+                value={getFieldValue(["location", "tax_lot"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("taxLot", ["location", "tax_lot"], v)
+                }
+              />
+              <EditableField
+                label="Additional Parcel"
+                value={getBooleanValue(["location", "additional_parcel"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "additionalParcel",
+                    ["location", "additional_parcel"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Additional Parcel Description"
+                value={getFieldValue(["location", "additional_parcel_description"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "additionalParcelDescription",
+                    ["location", "additional_parcel_description"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="MLA Area"
+                value={getFieldValue(["location", "mla_area"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("mlaArea", ["location", "mla_area"], v)
+                }
+              />
+              <EditableField
+                label="Flood Plain"
+                value={getBooleanValue(["location", "flood_plain"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("floodPlain", ["location", "flood_plain"], v)
+                }
+              />
+              <EditableField
+                label="ETJ"
+                value={getBooleanValue(["location", "etj"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("etj", ["location", "etj"], v)
+                }
+              />
+
+              {/* Schools */}
+              <EditableField
+                label="Elementary School District"
+                value={getFieldValue(["schools", "elementary_school_district"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "elementarySchoolDistrict",
+                    ["schools", "elementary_school_district"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Middle/Junior School"
+                value={getFieldValue(["schools", "middle_junior_school"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "middleJuniorSchool",
+                    ["schools", "middle_junior_school"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="High School"
+                value={getFieldValue(["schools", "high_school"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("highSchool", ["schools", "high_school"], v)
+                }
+              />
+              <EditableField
+                label="School District"
+                value={getFieldValue(["schools", "school_district"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("schoolDistrict", ["schools", "school_district"], v)
+                }
+              />
+
+              {/* Property Additional Fields */}
+              <EditableField
+                label="Year Built Source"
+                value={getFieldValue(["property", "year_built_source"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "yearBuiltSource",
+                    ["property", "year_built_source"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Bathrooms Total"
+                value={formatDecimal(property?.bathrooms_total as number | null)}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "bathroomsTotal",
+                    ["property", "bathrooms_total"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Living Area Source"
+                value={getFieldValue(["property", "living_area_source"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "livingAreaSource",
+                    ["property", "living_area_source"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="View"
+                value={getFieldValue(["property", "view"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("view", ["property", "view"], v)
+                }
+              />
+              <EditableField
+                label="Distance to Water"
+                value={formatDecimal(property?.distance_to_water as number | null)}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "distanceToWater",
+                    ["property", "distance_to_water"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Waterfront Features"
+                value={getFieldValue(["property", "waterfront_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "waterfrontFeatures",
+                    ["property", "waterfront_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Restrictions"
+                value={getFieldValue(["property", "restrictions"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange("restrictions", ["property", "restrictions"], v)
+                }
+              />
+              <EditableField
+                label="Lot Features"
+                value={getArrayValue(["property", "lot_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange("lotFeatures", ["property", "lot_features"], v)
+                }
+              />
+
+              {/* Features Additional Fields */}
+              <EditableField
+                label="Interior Features"
+                value={getArrayValue(["features", "interior_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "interiorFeatures",
+                    ["features", "interior_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Exterior Features"
+                value={getArrayValue(["features", "exterior_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "exteriorFeatures",
+                    ["features", "exterior_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Patio/Porch Features"
+                value={getArrayValue(["features", "patio_porch_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "patioPorchFeatures",
+                    ["features", "patio_porch_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Accessibility Features"
+                value={getArrayValue(["features", "accessibility_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "accessibilityFeatures",
+                    ["features", "accessibility_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Horse Amenities"
+                value={getArrayValue(["features", "horse_amenities"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "horseAmenities",
+                    ["features", "horse_amenities"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Other Structures"
+                value={getArrayValue(["features", "other_structures"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "otherStructures",
+                    ["features", "other_structures"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Pool Features"
+                value={getArrayValue(["features", "pool_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "poolFeatures",
+                    ["features", "pool_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Guest Accommodations"
+                value={getFieldValue(["features", "guest_accommodations"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "guestAccommodations",
+                    ["features", "guest_accommodations"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Window Features"
+                value={getArrayValue(["features", "window_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "windowFeatures",
+                    ["features", "window_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Security Features"
+                value={getArrayValue(["features", "security_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "securityFeatures",
+                    ["features", "security_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Laundry Location"
+                value={getFieldValue(["features", "laundry_location"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "laundryLocation",
+                    ["features", "laundry_location"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Fencing"
+                value={getFieldValue(["features", "fencing"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("fencing", ["features", "fencing"], v)
+                }
+              />
+              <EditableField
+                label="Community Features"
+                value={getArrayValue(["features", "community_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "communityFeatures",
+                    ["features", "community_features"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Parking Features"
+                value={getArrayValue(["features", "parking_features"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "parkingFeatures",
+                    ["features", "parking_features"],
+                    v,
+                  )
+                }
+              />
+
+              {/* Utilities Additional Fields */}
+              <EditableField
+                label="Utilities"
+                value={getArrayValue(["utilities", "utilities"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange("utilities", ["utilities", "utilities"], v)
+                }
+              />
+              <EditableField
+                label="Documents Available"
+                value={getArrayValue(["utilities", "documents_available"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "documentsAvailable",
+                    ["utilities", "documents_available"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Disclosures"
+                value={getArrayValue(["utilities", "disclosures"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange("disclosures", ["utilities", "disclosures"], v)
+                }
+              />
+
+              {/* Green Energy */}
+              <EditableField
+                label="Green Energy"
+                value={getArrayValue(["green_energy", "green_energy"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "greenEnergy",
+                    ["green_energy", "green_energy"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Green Sustainability"
+                value={getArrayValue(["green_energy", "green_sustainability"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "greenSustainability",
+                    ["green_energy", "green_sustainability"],
+                    v,
+                  )
+                }
+              />
+
+              {/* Financial Additional Fields */}
+              <EditableField
+                label="Buyer Incentive"
+                value={getFieldValue(["financial", "buyer_incentive"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "buyerIncentive",
+                    ["financial", "buyer_incentive"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Tax Exemptions"
+                value={getArrayValue(["financial", "tax_exemptions"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "taxExemptions",
+                    ["financial", "tax_exemptions"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Possession"
+                value={getFieldValue(["financial", "possession"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("possession", ["financial", "possession"], v)
+                }
+              />
+              <EditableField
+                label="Seller Contributions"
+                value={getBooleanValue(["financial", "seller_contributions"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "sellerContributions",
+                    ["financial", "seller_contributions"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Intermediary"
+                value={getBooleanValue(["financial", "intermediary"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange("intermediary", ["financial", "intermediary"], v)
+                }
+              />
+
+              {/* Showing Additional Fields */}
+              <EditableField
+                label="Showing Requirements"
+                value={getArrayValue(["showing", "showing_requirements"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "showingRequirements",
+                    ["showing", "showing_requirements"],
+                    v,
+                  )
+                }
+              />
+              <EditableField
+                label="Lockbox Location"
+                value={getFieldValue(["showing", "lockbox_location"])}
+                forceEdit={isEditMode}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "lockboxLocation",
+                    ["showing", "lockbox_location"],
+                    v,
+                  )
+                }
+              />
+
+              {/* Agents Additional Fields */}
+              <EditableField
+                label="Co-Listing Agent"
+                value={getFieldValue(["agents", "co_listing_agent"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "coListingAgent",
+                    ["agents", "co_listing_agent"],
+                    v,
+                  )
+                }
+              />
+
+              {/* Remarks Additional Fields */}
+              <EditableField
+                label="Directions"
+                value={getFieldValue(["remarks", "directions"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange("directions", ["remarks", "directions"], v)
+                }
+              />
+              <EditableField
+                label="Syndication Remarks"
+                value={getFieldValue(["remarks", "syndication_remarks"])}
+                forceEdit={isEditMode}
+                multiline={true}
+                onSave={(v) =>
+                  handleFieldChange(
+                    "syndicationRemarks",
+                    ["remarks", "syndication_remarks"],
+                    v,
+                  )
+                }
+              />
+            </TopicSection>
           </div>
 
-          {/* Right Column: Topics 6-7 */}
+          {/* Right Column: Topics 7-8 */}
           <div className="p-4">
             <TopicSection
-              title="6. Location & Environmental"
+              title="7. Location & Environmental"
               defaultOpen={true}
             >
               <div style={{ gridColumn: "1 / -1", marginBottom: "0.1rem" }}>
@@ -1319,7 +1967,7 @@ const ReviewPage = ({ onNext }: ReviewPageProps) => {
               </div>
             </TopicSection>
 
-            <TopicSection title="7. Marketing Remarks" defaultOpen={true}>
+            <TopicSection title="8. Marketing Remarks" defaultOpen={true}>
               <div style={{ gridColumn: "1 / -1" }}>
                 <EditableField
                   label="Public Remarks"

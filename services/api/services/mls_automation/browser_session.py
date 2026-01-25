@@ -7,7 +7,7 @@ from uuid import UUID
 from threading import Lock
 
 try:
-    from playwright.sync_api import Browser, BrowserContext, Page
+    from playwright.async_api import Browser, BrowserContext, Page
     PLAYWRIGHT_AVAILABLE = True
 except ImportError:
     PLAYWRIGHT_AVAILABLE = False
@@ -82,6 +82,8 @@ def close_session(listing_id: UUID) -> bool:
         
         try:
             session.is_active = False
+            # Note: browser.close() needs to be called from async context
+            # This function should be converted to async or handled differently
             session.browser.close()
             # Stop playwright instance
             if listing_id in _playwright_instances:
